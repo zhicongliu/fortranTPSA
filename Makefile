@@ -56,4 +56,4 @@ $(PRG_OBJ) : $(MOD_OBJS)
 # Blocks and allocations depends on shared
 mod_polymap.o: mod_mathfunc.o
 quadrupole.o: mod_tpsa.o
-#example.o: mod_tpsa.o
+example.o: mod_tpsa.o
