@@ -7,6 +7,7 @@ MODS=$(wildcard mod*.f90) $(notdir $(wildcard src/mod*.f90))
 MOD_OBJS=$(patsubst %.f90,%.o,$(MODS))
 
 VPATH  = %.90 src
+OBJDIR = obj
 
 # Compiler/Linker settings
 FC = gfortran
@@ -31,7 +32,8 @@ $(OBJS) : %.o : %.f90
 # Linker
 $(PROGRAM) : $(OBJS)
 	$(FC) $(FLFLAGS) -o $@ $^
-	mv *.mod* *.o obj/
+	@mkdir -p $(OBJDIR)
+	@mv *.mod* *.o $(OBJDIR)
 	@echo "make done"
 debug:
 	@echo "SRCS = $(SRCS)"
