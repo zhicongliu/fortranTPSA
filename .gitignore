@@ -1,9 +1,12 @@
+<<<<<<< HEAD
 obj/*
 *.py
 *.txt
 run
 *.un~
 
+=======
+>>>>>>> fcedcafd95e2dc9973131c2ab7cf9c184933d034
 # Prerequisites
 *.d
 
