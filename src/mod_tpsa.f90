@@ -26,9 +26,9 @@ Module TPSAMod
     PROCEDURE :: pTpsaDiv   =>  TpsaDiv
     GENERIC :: OPERATOR(/)  => pTpsaDiv
     
-    PROCEDURE :: pTpsaEq      =>  TpsaEq
+    !PROCEDURE :: pTpsaEq      =>  TpsaEq
     PROCEDURE :: pTpsaEqN     =>  TpsaEqN
-    GENERIC :: assignment(=)  => pTpsaEq,pTpsaEqN
+    GENERIC :: assignment(=)  => pTpsaEqN
     
     PROCEDURE :: pTpsaIsEq    =>  TpsaIsEq
     GENERIC :: OPERATOR(.eq.) => pTpsaIsEq
@@ -781,6 +781,31 @@ contains
       enddo
     end subroutine
 
-End Module TPSAMod
- 
+    subroutine pushPtc_TPSA(ptc,tpsa)
+      !assume it is (x,px,y,py,z,pz)
+      integer                            :: nPtc
+      double precision, dimension(:,:),    Intent(Inout) :: ptc
+      type(dctps), dimension(:),      Intent(In)    :: tpsa
+      double precision,      dimension(6)                     :: ptcTemp
+      double precision :: sumTemp
+      integer :: i,j,k,m
+      
+      nPtc = size(ptc,2)
+      do k = 1,nPtc
+        ptcTemp=0.d0
+        do j = 1,6
+          do i = 1,tpsa(j)%terms
+            if(abs(tpsa(j)%map(i)) <1.0E-14 .and. i>1) cycle
+            sumTemp = tpsa(j)%map(i)
+            do m = 1,6
+              if(pmap%map(m+1,i) ==0 ) cycle
+              sumTemp = sumTemp * ptc(m,k) ** pmap%map(m+1,i)
+            enddo
+            ptcTemp(j) = ptcTemp(j) + sumTemp
+            enddo
+        enddo
+        ptc(:,k) = ptcTemp
+      enddo
+    end subroutine pushPtc_TPSA
 
+End Module TPSAMod
